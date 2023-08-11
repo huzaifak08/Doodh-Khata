@@ -10,7 +10,7 @@ class KhataModel extends HiveObject {
   DateTime? date;
 
   @HiveField(1)
-  int? literPrice;
+  double? literPrice;
 
   @HiveField(2)
   List<EntryModel> entryModel;

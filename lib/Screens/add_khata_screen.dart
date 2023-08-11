@@ -92,7 +92,7 @@ class _AddKhataScreenState extends State<AddKhataScreen> {
                 onPressed: () {
                   final data = KhataModel(
                       date: selectedDate,
-                      literPrice: int.parse(priceController.text),
+                      literPrice: double.parse(priceController.text),
                       entryModel: []);
 
                   // Box:

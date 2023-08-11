@@ -16,6 +16,25 @@ class _HomeScreenState extends State<HomeScreen> {
   final DateFormat monthFormat = DateFormat('MMMM');
   final DateFormat yearFormat = DateFormat('yyyy');
 
+  Map<int, double> monthTotalMap = {};
+
+  void calculateMonthTotals(List<KhataModel> khataList) {
+    monthTotalMap.clear();
+
+    for (final khataModel in khataList) {
+      final month = khataModel.date!.month;
+      final entryModels = khataModel.entryModel;
+
+      double total = 0;
+
+      for (final entryModel in entryModels) {
+        total += entryModel.entryPrice ?? 0;
+      }
+
+      monthTotalMap[month] = total;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -30,11 +49,18 @@ class _HomeScreenState extends State<HomeScreen> {
         valueListenable: Boxes.getKhataData().listenable(),
         builder: (context, box, child) {
           final data = box.values.toList().cast<KhataModel>();
+
+          // Calculate month total:
+          calculateMonthTotals(data);
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2),
             itemCount: box.length,
             itemBuilder: (context, index) {
+              final khataModel = data[index];
+              final monthTotal = monthTotalMap[khataModel.date!.month] ?? 0;
+
               return InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, RouteName.entryScreen,
@@ -52,18 +78,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 2,
                     ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: ListView(
                     children: [
                       Text(
                         "${monthFormat.format(data[index].date!)} / ${yearFormat.format(data[index].date!)}",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                       const Divider(),
                       SizedBox(height: height * 0.01),
-                      Text("Price/Liter: ${data[index].literPrice.toString()}"),
+                      Text(
+                        "PKR/Kilo: ${data[index].literPrice.toString()}",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      ),
                       SizedBox(height: height * 0.01),
-                      const Text("Total Price:")
+                      Text(
+                        "Total PKR:  $monthTotal",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      ),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.delete_outline)),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit_note_outlined))
+                        ],
+                      )
                     ],
                   ),
                 ),

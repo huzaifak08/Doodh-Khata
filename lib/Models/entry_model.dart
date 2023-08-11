@@ -11,5 +11,8 @@ class EntryModel extends HiveObject {
   @HiveField(1)
   double? quantity;
 
-  EntryModel({this.date, this.quantity});
+  @HiveField(2)
+  double? entryPrice;
+
+  EntryModel({this.date, this.quantity, this.entryPrice});
 }

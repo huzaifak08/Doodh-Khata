@@ -13,15 +13,15 @@ class AddEntryScreen extends StatefulWidget {
 }
 
 class _AddEntryScreenState extends State<AddEntryScreen> {
-  DateTime? selectedDate;
+  // DateTime? selectedDate;
+  DateTime? newDate;
   final DateFormat dateFormat = DateFormat("d/MMMM/yyyy");
 
   double dropDownValue = quantityList.first;
 
   @override
   void initState() {
-    selectedDate = DateTime.now();
-
+    newDate = DateTime.now();
     super.initState();
   }
 
@@ -44,20 +44,22 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
               children: [
                 TextButton(
                   onPressed: () {
-                    showDatePicker(
-                      context: context,
-                      firstDate: DateTime(DateTime.now().year - 5, 5),
-                      lastDate: DateTime(DateTime.now().year + 8, 9),
-                      initialDate: DateTime.now(),
-                    ).then((value) {
-                      if (value != null) {
-                        setState(() {
-                          selectedDate = value;
-                        });
-                      } else {
-                        return null;
-                      }
-                    });
+                    // showDatePicker(
+                    //   context: context,
+                    //   firstDate: DateTime(DateTime.now().year - 5, 5),
+                    //   lastDate: DateTime(DateTime.now().year + 8, 9),
+                    //   initialDate: DateTime.now(),
+                    // ).then((value) {
+                    //   if (value != null) {
+                    //     setState(() {
+                    //       selectedDate = value;
+                    //     });
+                    //   } else {
+                    //     return null;
+                    //   }
+                    // });
+
+                    _selectDate(context);
                   },
                   child: const Text(
                     'Pick Date',
@@ -65,7 +67,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                   ),
                 ),
                 Text(
-                  ":  ${dateFormat.format(selectedDate!)}",
+                  " ${dateFormat.format(newDate!)}",
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -103,8 +105,11 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                   final existingKhataModel = box.get(0);
 
                   if (existingKhataModel != null) {
-                    final entryModel =
-                        EntryModel(date: selectedDate, quantity: dropDownValue);
+                    final entryModel = EntryModel(
+                        date: newDate,
+                        quantity: dropDownValue,
+                        entryPrice:
+                            (dropDownValue * existingKhataModel.literPrice!));
 
                     existingKhataModel.entryModel.add(entryModel);
 
@@ -118,18 +123,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
 
                     print("Entry Model Date ${entryModel.date}");
                     print("Entry Model Quantity ${entryModel.quantity}");
-
-                    // final formattedDate =
-                    //     DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS')
-                    //         .format(existingKhataModel.entryModel!.date!);
-
-                    // final retrievedEntryModel = box.get(formattedDate);
-
-                    // if (retrievedEntryModel != null) {
-                    //   print('Entry retrieved: ${retrievedEntryModel.date}');
-                    // } else {
-                    //   print('Entry not found in the box');
-                    // }
+                    print("Entry Model Price ${entryModel.entryPrice}");
 
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Entry Saved Successfully')));
@@ -146,5 +140,25 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime currentDate = DateTime.now();
+    final DateTime firstSelectedDate =
+        DateTime(currentDate.year, currentDate.month, 1);
+    final DateTime lastSelectedDate =
+        DateTime(currentDate.year, currentDate.month + 1, 0);
+
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: firstSelectedDate,
+        lastDate: lastSelectedDate);
+
+    if (picked != null && picked != newDate) {
+      setState(() {
+        newDate = picked;
+      });
+    }
   }
 }

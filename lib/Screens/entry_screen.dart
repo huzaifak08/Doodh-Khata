@@ -3,8 +3,8 @@ import 'package:doodh_app/Models/entry_model.dart';
 import 'package:doodh_app/Models/khata_model.dart';
 import 'package:doodh_app/Routes%20Service/route_name.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -34,59 +34,78 @@ class _EntryScreenState extends State<EntryScreen> {
         valueListenable: Boxes.getKhataData().listenable(),
         builder: (context, box, child) {
           final khataModels = box.values.toList().cast<KhataModel>();
-          final entries = <EntryModel>[];
+          final entryList = <EntryModel>[];
           final DateTime khataDate = widget.date[
               'date']; // Must convert it back to DateTime before comparison
 
           for (final khataModel in khataModels) {
             if (khataModel.date!.month == khataDate.month) {
-              entries.addAll(khataModel.entryModel);
+              entryList.addAll(khataModel.entryModel);
             }
           }
 
-          if (entries.isNotEmpty) {
+          if (entryList.isNotEmpty) {
             return ListView.builder(
-              itemCount: entries.length,
+              itemCount: entryList.length,
               itemBuilder: (context, index) {
-                final entry = entries[index];
+                final entry = entryList[index];
 
-                // return ListTile(
-                //   title: Text(entry.date.toString()),
-                // );
-                return Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: width * 0.02, vertical: height * 0.01),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.02, vertical: height * 0.01),
-                  height: height * 0.09,
-                  decoration: BoxDecoration(
-                      color: Colors.deepPurpleAccent.shade200.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(23)),
-                  child: Padding(
+                return InkWell(
+                  // Delete Entry:
+
+                  onTap: () {
+                    _deleteDialog(onPressed: () {
+                      _deleteEntry(entry);
+
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: width * 0.02, vertical: height * 0.01),
                     padding: EdgeInsets.symmetric(
                         horizontal: width * 0.02, vertical: height * 0.01),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Day: ${dayFormat.format(khataDate)}",
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          "Liters: ${entry.quantity}",
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w700),
-                        ),
-                      ],
+                    height: height * 0.1,
+                    decoration: BoxDecoration(
+                        color:
+                            Colors.deepPurpleAccent.shade200.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(23)),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.02, vertical: height * 0.01),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Day: ${dayFormat.format(entry.date!)}",
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Kilo: ${entry.quantity}",
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                "PKR: ${entry.entryPrice}",
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
               },
             );
           } else {
-            return Center(
-              child: Text('No Data'),
+            return const Center(
+              child: Text('Empty Khata'),
             );
           }
         },
@@ -99,19 +118,45 @@ class _EntryScreenState extends State<EntryScreen> {
       ),
     );
   }
+
+  _deleteDialog({required VoidCallback onPressed}) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Entry'),
+          content: const Text('Are you sure you want to delete entry?'),
+          actions: [
+            ElevatedButton.icon(
+                onPressed: onPressed,
+                icon: const Icon(Icons.delete),
+                label: const Text('Delete')),
+            ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.cancel),
+                label: const Text('Cancel')),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteEntry(EntryModel entry) async {
+    final box = Boxes.getKhataData();
+
+    final DateTime khataDate = widget
+        .date['date']; // Must convert it back to DateTime before comparison
+
+    final specificKhataModel = box.values.firstWhere(
+      (khata) => khata.date!.month == khataDate.month,
+    );
+
+    specificKhataModel.entryModel.remove(entry);
+    specificKhataModel.save();
+
+    // Refresh the UI after deletion
+    setState(() {});
+  }
 }
-
- 
-
-
-
-                // return ListView.builder(
-          //   itemCount: box.length,
-          //   itemBuilder: (context, index) {
-          //     return ListTile(
-          //       title: Text(
-          //           "${monthFormat.format(data[index].month!)} / ${yearFormat.format(data[index].month!)}"),
-          //       subtitle: Text(data[index].literPrice.toString()),
-          //     );
-          //   },
-          // );

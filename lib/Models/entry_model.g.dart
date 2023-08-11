@@ -19,17 +19,20 @@ class EntryModelAdapter extends TypeAdapter<EntryModel> {
     return EntryModel(
       date: fields[0] as DateTime?,
       quantity: fields[1] as double?,
+      entryPrice: fields[2] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EntryModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
-      ..write(obj.quantity);
+      ..write(obj.quantity)
+      ..writeByte(2)
+      ..write(obj.entryPrice);
   }
 
   @override

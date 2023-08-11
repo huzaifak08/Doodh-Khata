@@ -18,7 +18,7 @@ class KhataModelAdapter extends TypeAdapter<KhataModel> {
     };
     return KhataModel(
       date: fields[0] as DateTime?,
-      literPrice: fields[1] as int?,
+      literPrice: fields[1] as double?,
       entryModel: (fields[2] as List).cast<EntryModel>(),
     );
   }

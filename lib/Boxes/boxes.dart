@@ -3,5 +3,5 @@ import 'package:hive/hive.dart';
 
 class Boxes {
   static Box<KhataModel> getKhataData() =>
-      Hive.box<KhataModel>('khataaaaaaaaaaa');
+      Hive.box<KhataModel>('khataaaaaaaaaaaaa');
 }
