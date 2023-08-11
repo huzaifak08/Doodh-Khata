@@ -92,10 +92,11 @@ class _AddKhataScreenState extends State<AddKhataScreen> {
                 onPressed: () {
                   final data = KhataModel(
                       date: selectedDate,
-                      literPrice: int.parse(priceController.text));
+                      literPrice: int.parse(priceController.text),
+                      entryModel: []);
 
                   // Box:
-                  final box = Boxes.getData();
+                  final box = Boxes.getKhataData();
                   box.add(data);
 
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

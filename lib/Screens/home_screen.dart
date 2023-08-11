@@ -2,7 +2,6 @@ import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/khata_model.dart';
 import 'package:doodh_app/Routes%20Service/route_name.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -28,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       body: ValueListenableBuilder<Box<KhataModel>>(
-        valueListenable: Boxes.getData().listenable(),
+        valueListenable: Boxes.getKhataData().listenable(),
         builder: (context, box, child) {
           final data = box.values.toList().cast<KhataModel>();
           return GridView.builder(
@@ -39,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, RouteName.entryScreen,
-                      arguments: {'date': data[index].date});
+                      arguments: {'date': data[index].date!});
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(
@@ -64,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(height: height * 0.01),
                       Text("Price/Liter: ${data[index].literPrice.toString()}"),
                       SizedBox(height: height * 0.01),
-                      Text("Total Price:")
+                      const Text("Total Price:")
                     ],
                   ),
                 ),

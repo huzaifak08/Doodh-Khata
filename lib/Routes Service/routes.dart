@@ -16,7 +16,7 @@ class Routes {
 
       case RouteName.entryScreen:
         return MaterialPageRoute(
-            builder: (context) => EntryScreen(data: settings.arguments as Map));
+            builder: (context) => EntryScreen(date: settings.arguments as Map));
 
       case RouteName.addEntryScreen:
         return MaterialPageRoute(builder: (context) => const AddEntryScreen());

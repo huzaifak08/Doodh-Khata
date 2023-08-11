@@ -1,38 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'khata_model.dart';
+part of 'entry_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class KhataModelAdapter extends TypeAdapter<KhataModel> {
+class EntryModelAdapter extends TypeAdapter<EntryModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  KhataModel read(BinaryReader reader) {
+  EntryModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return KhataModel(
+    return EntryModel(
       date: fields[0] as DateTime?,
-      literPrice: fields[1] as int?,
-      entryModel: (fields[2] as List).cast<EntryModel>(),
+      quantity: fields[1] as double?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, KhataModel obj) {
+  void write(BinaryWriter writer, EntryModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
-      ..write(obj.literPrice)
-      ..writeByte(2)
-      ..write(obj.entryModel);
+      ..write(obj.quantity);
   }
 
   @override
@@ -41,7 +38,7 @@ class KhataModelAdapter extends TypeAdapter<KhataModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is KhataModelAdapter &&
+      other is EntryModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

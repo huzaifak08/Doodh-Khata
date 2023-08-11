@@ -1,3 +1,4 @@
+import 'package:doodh_app/Models/entry_model.dart';
 import 'package:doodh_app/Models/khata_model.dart';
 import 'package:doodh_app/Routes%20Service/route_name.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ void main() async {
   Hive.init(directory.path);
 
   Hive.registerAdapter(KhataModelAdapter());
-  await Hive.openBox<KhataModel>('khata');
+  Hive.registerAdapter(EntryModelAdapter());
+
+  await Hive.openBox<KhataModel>('khataaaaaaaaaaa');
 
   runApp(const MyApp());
 }
