@@ -1,6 +1,8 @@
 import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/khata_model.dart';
 import 'package:doodh_app/Routes%20Service/route_name.dart';
+import 'package:doodh_app/Widgets/other_widgets.dart';
+import 'package:doodh_app/Widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final DateFormat monthFormat = DateFormat('MMMM');
   final DateFormat yearFormat = DateFormat('yyyy');
+
+  final priceController = TextEditingController();
 
   Map<int, double> monthTotalMap = {};
 
@@ -106,10 +110,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                // Delete Khata:
+
+                                deleteDialog(
+                                  context: context,
+                                  kOrE: 'Khata',
+                                  onPressed: () {
+                                    deleteKhata(data[index]); // Delete Khata
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
                               icon: const Icon(Icons.delete_outline)),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () => _editKhataDialog(
+                                  khataModel: data[index],
+                                  price: data[index].literPrice!),
+                              // Must Change ---------------------------------------
                               icon: const Icon(Icons.edit_note_outlined))
                         ],
                       )
@@ -137,6 +155,75 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  // Delete Entire Khata:
+  void deleteKhata(KhataModel khataModel) async {
+    await khataModel.delete();
+  }
+
+  // Edit Khata:
+  Future<void> _editKhataDialog(
+      {required KhataModel khataModel, required double price}) async {
+    final height = MediaQuery.of(context).size.height;
+
+    priceController.text = price.toString();
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit PKR/Kilo'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Please enter the new Price per Kilo!'),
+              SizedBox(height: height * 0.02),
+              TextField(
+                controller: priceController,
+                decoration:
+                    textInputDecoration.copyWith(labelText: 'Enter PKR/Kilo'),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton.icon(
+                onPressed: () async {
+                  final newPrice = double.parse(priceController.text);
+
+                  khataModel.literPrice = newPrice;
+
+                  await khataModel.save();
+
+                  // Update old entries with the new modified price
+                  final entryBox = Boxes.getEntryData();
+                  final oldEntries = entryBox.values.where(
+                      (entry) => entry.date!.month == khataModel.date!.month);
+
+                  for (final entry in oldEntries) {
+                    entry.entryPrice = entry.quantity! * newPrice;
+
+                    debugPrint("New Entry ${entry.entryPrice}");
+                    await entry.save();
+                  }
+
+                  priceController.clear();
+
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.edit_attributes_outlined),
+                label: const Text('Modify')),
+            ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.cancel_outlined),
+                label: const Text('Cancel')),
+          ],
+        );
+      },
     );
   }
 }

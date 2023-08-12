@@ -1,5 +1,6 @@
 import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/khata_model.dart';
+import 'package:doodh_app/Widgets/other_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:intl/intl.dart';
@@ -73,16 +74,8 @@ class _AddKhataScreenState extends State<AddKhataScreen> {
             SizedBox(height: height * 0.03),
             TextField(
               controller: priceController,
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(23),
-                    borderSide: const BorderSide(width: 2),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(23),
-                    borderSide: const BorderSide(width: 2),
-                  ),
-                  hintText: 'Enter PKR/Liter'),
+              decoration:
+                  textInputDecoration.copyWith(hintText: 'Enter PKR/Liter'),
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: height * 0.04),

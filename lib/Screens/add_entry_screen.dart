@@ -150,10 +150,12 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         DateTime(currentDate.year, currentDate.month + 1, 0);
 
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: firstSelectedDate,
-        lastDate: lastSelectedDate);
+      context: context,
+      initialDate: currentDate,
+      firstDate: firstSelectedDate,
+      lastDate: lastSelectedDate,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
 
     if (picked != null && picked != newDate) {
       setState(() {

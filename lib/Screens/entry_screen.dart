@@ -2,6 +2,7 @@ import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/entry_model.dart';
 import 'package:doodh_app/Models/khata_model.dart';
 import 'package:doodh_app/Routes%20Service/route_name.dart';
+import 'package:doodh_app/Widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 // ignore: depend_on_referenced_packages
@@ -54,11 +55,15 @@ class _EntryScreenState extends State<EntryScreen> {
                   // Delete Entry:
 
                   onTap: () {
-                    _deleteDialog(onPressed: () {
-                      _deleteEntry(entry);
+                    deleteDialog(
+                      context: context,
+                      kOrE: 'Entry',
+                      onPressed: () {
+                        _deleteEntry(entry);
 
-                      Navigator.pop(context);
-                    });
+                        Navigator.pop(context);
+                      },
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(
@@ -119,30 +124,7 @@ class _EntryScreenState extends State<EntryScreen> {
     );
   }
 
-  _deleteDialog({required VoidCallback onPressed}) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delete Entry'),
-          content: const Text('Are you sure you want to delete entry?'),
-          actions: [
-            ElevatedButton.icon(
-                onPressed: onPressed,
-                icon: const Icon(Icons.delete),
-                label: const Text('Delete')),
-            ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.cancel),
-                label: const Text('Cancel')),
-          ],
-        );
-      },
-    );
-  }
-
+  // Delete Entry:
   void _deleteEntry(EntryModel entry) async {
     final box = Boxes.getKhataData();
 

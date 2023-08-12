@@ -15,7 +15,8 @@ void main() async {
   Hive.registerAdapter(KhataModelAdapter());
   Hive.registerAdapter(EntryModelAdapter());
 
-  await Hive.openBox<KhataModel>('khataaaaaaaaaaaaa');
+  await Hive.openBox<KhataModel>('khota');
+  await Hive.openBox<EntryModel>('entry');
 
   runApp(const MyApp());
 }
