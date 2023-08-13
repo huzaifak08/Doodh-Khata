@@ -50,8 +50,10 @@ class _AddKhataScreenState extends State<AddKhataScreen> {
                   onPressed: () {
                     showMonthPicker(
                       context: context,
-                      firstDate: DateTime(DateTime.now().year - 5, 5),
-                      lastDate: DateTime(DateTime.now().year + 8, 9),
+                      firstDate: DateTime(
+                          DateTime.now().year, DateTime.now().month, 1),
+                      lastDate: DateTime(
+                          DateTime.now().year, DateTime.now().month + 1, 0),
                       initialDate: DateTime.now(),
                     ).then((value) {
                       if (value != null) {
