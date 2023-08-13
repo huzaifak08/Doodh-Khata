@@ -72,12 +72,12 @@ class _EntryScreenState extends State<EntryScreen> {
                         horizontal: width * 0.02, vertical: height * 0.01),
                     height: height * 0.1,
                     decoration: BoxDecoration(
-                        color:
-                            Colors.deepPurpleAccent.shade200.withOpacity(0.5),
+                        // color:
+                        //     Colors.deepPurpleAccent.shade200.withOpacity(0.5),
+                        border: Border.all(width: 2),
                         borderRadius: BorderRadius.circular(23)),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.02, vertical: height * 0.01),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
