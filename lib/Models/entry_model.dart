@@ -4,15 +4,17 @@ part 'entry_model.g.dart';
 @HiveType(typeId: 1)
 class EntryModel extends HiveObject {
   // Fields:
-
   @HiveField(0)
-  DateTime? date;
+  String? khataKey;
 
   @HiveField(1)
-  double? quantity;
+  DateTime? date;
 
   @HiveField(2)
+  double? quantity;
+
+  @HiveField(3)
   double? entryPrice;
 
-  EntryModel({this.date, this.quantity, this.entryPrice});
+  EntryModel({this.khataKey, this.date, this.quantity, this.entryPrice});
 }

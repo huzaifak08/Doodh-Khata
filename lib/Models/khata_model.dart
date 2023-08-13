@@ -5,15 +5,18 @@ part 'khata_model.g.dart';
 @HiveType(typeId: 0)
 class KhataModel extends HiveObject {
   // Hive Fields:
-
   @HiveField(0)
-  DateTime? date;
+  String? khataKey;
 
   @HiveField(1)
-  double? literPrice;
+  DateTime? date;
 
   @HiveField(2)
+  double? literPrice;
+
+  @HiveField(3)
   List<EntryModel> entryModel;
 
-  KhataModel({this.date, this.literPrice, required this.entryModel});
+  KhataModel(
+      {this.khataKey, this.date, this.literPrice, required this.entryModel});
 }

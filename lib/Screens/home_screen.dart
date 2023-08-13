@@ -1,8 +1,8 @@
 import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/khata_model.dart';
 import 'package:doodh_app/Routes%20Service/route_name.dart';
+import 'package:doodh_app/Widgets/dialog_widget.dart';
 import 'package:doodh_app/Widgets/other_widgets.dart';
-import 'package:doodh_app/Widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';

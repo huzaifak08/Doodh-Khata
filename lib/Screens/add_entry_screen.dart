@@ -1,7 +1,9 @@
 import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/entry_model.dart';
+import 'package:doodh_app/Provider/khataKey_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../Constants/consts.dart';
 
@@ -29,6 +31,9 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    final khataKeyProvider = Provider.of<KhatakeyProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add new Entry'),
@@ -101,29 +106,27 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
               child: ElevatedButton(
                 onPressed: () async {
                   final box = Boxes.getKhataData();
+                  final existingKhataKey = khataKeyProvider.khataKey;
 
-                  final existingKhataModel = box.get(0);
+                  final existingKhataModel = box.get(existingKhataKey);
 
                   if (existingKhataModel != null) {
                     final entryModel = EntryModel(
-                        date: newDate,
-                        quantity: dropDownValue,
-                        entryPrice:
-                            (dropDownValue * existingKhataModel.literPrice!));
+                      date: newDate,
+                      quantity: dropDownValue,
+                      entryPrice:
+                          (dropDownValue * existingKhataModel.literPrice!),
+                      khataKey: existingKhataModel.khataKey,
+                    );
 
                     existingKhataModel.entryModel.add(entryModel);
 
                     existingKhataModel.save();
 
-                    // print(
-                    //     'Entry Model in KhataModel date: ${existingKhataModel.entryModel?.date}');
-
-                    // print(
-                    //     'Entry Model in KhataModel quantity: ${existingKhataModel.entryModel!.quantity}');
-
-                    print("Entry Model Date ${entryModel.date}");
-                    print("Entry Model Quantity ${entryModel.quantity}");
-                    print("Entry Model Price ${entryModel.entryPrice}");
+                    debugPrint("Existing Key ${existingKhataModel.khataKey}");
+                    debugPrint("Entry Model Date ${entryModel.date}");
+                    debugPrint("Entry Model Quantity ${entryModel.quantity}");
+                    debugPrint("Entry Model Price ${entryModel.entryPrice}");
 
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Entry Saved Successfully')));

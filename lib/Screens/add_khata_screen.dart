@@ -1,9 +1,12 @@
 import 'package:doodh_app/Boxes/boxes.dart';
 import 'package:doodh_app/Models/khata_model.dart';
+import 'package:doodh_app/Provider/khataKey_provider.dart';
 import 'package:doodh_app/Widgets/other_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class AddKhataScreen extends StatefulWidget {
   const AddKhataScreen({super.key});
@@ -27,6 +30,8 @@ class _AddKhataScreenState extends State<AddKhataScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    final khataKeyProvider = Provider.of<KhatakeyProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -83,14 +88,23 @@ class _AddKhataScreenState extends State<AddKhataScreen> {
               width: width * 0.5,
               child: ElevatedButton(
                 onPressed: () {
+                  final khataKey = const Uuid().v4();
+
                   final data = KhataModel(
-                      date: selectedDate,
-                      literPrice: double.parse(priceController.text),
-                      entryModel: []);
+                    khataKey: khataKey,
+                    date: selectedDate,
+                    literPrice: double.parse(priceController.text),
+                    entryModel: [],
+                  );
+
+                  khataKeyProvider.setKhataKey(khataKey);
 
                   // Box:
                   final box = Boxes.getKhataData();
-                  box.add(data);
+                  // box.add(data);
+
+                  box.put(khataKey, data);
+                  debugPrint("Khata Key: $khataKey");
 
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Khata Saved Successfully')));
