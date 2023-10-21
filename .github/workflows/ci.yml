@@ -26,3 +26,11 @@ jobs:
 
       - name: Run tests
         run: flutter test
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      # - name: Build APP Bundle
+      #   run: flutter build appbundle --release
+
+      sadasadasdaasdasdadasdasdasd
